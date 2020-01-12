@@ -9,11 +9,11 @@
 ## Add information about the package that will contain your app
 golem::fill_desc(
   pkg_name = "kolejkeRShiny", # The Name of the package containing the App 
-  pkg_title = "PKG_TITLE", # The Title of the package containing the App 
-  pkg_description = "PKG_DESC.", # The Description of the package containing the App 
-  author_first_name = c("Hanna", "Jakub", "Sebastian", "Pawel"), # Your First Name
-  author_last_name = c("Zdulska", "Pingielski", "Sowik", "Morgen"),  # Your Last Name
-  author_email = c("zdulskah@student.mini.pw.edu.com", "NA", "NA", "NA"),      # Your Email
+  pkg_title = "KolejkeR Shiny Application", # The Title of the package containing the App 
+  pkg_description = "Package using kolejkeR library to show realtime data about queues in Warsaw's offices in form of shiny application.", # The Description of the package containing the App 
+  author_first_name = "Hanna", # Your First Name
+  author_last_name = "Zdulska",  # Your Last Name
+  author_email = "zdulskah@student.mini.pw.edu.com",      # Your Email
   repo_url = NULL # The (optional) URL of the GitHub Repo
 )     
 
@@ -25,19 +25,19 @@ golem::set_golem_options()
 ## 
 ## If you want to use the MIT licence, README, code of conduct, lifecycle badge, and news
 
-usethis::use_mit_license( name = "Golem User" )  # You can set another licence here
+usethis::use_mit_license( name = "Hanna Zdulska" )  # You can set another licence here
 usethis::use_readme_rmd( open = FALSE )
-usethis::use_code_of_conduct()
+#usethis::use_code_of_conduct()
 usethis::use_lifecycle_badge( "Experimental" )
 
-usethis::use_news_md( open = FALSE )
+#usethis::use_news_md( open = FALSE )
 usethis::use_git()
 
 ## 1.3 - Add a data-raw folder
 ## 
 ## If you have data in your package
-usethis::use_data_raw( name = "my_dataset", open = FALSE ) # Change "my_dataset"
-
+# It is better to add data set in kolejkeR instead
+# usethis::use_data_raw( name = "my_dataset", open = FALSE ) # Change "my_dataset"
 ## 1.4 - Init Tests
 ## 
 ## Create a template for tests
