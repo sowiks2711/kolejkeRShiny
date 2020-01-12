@@ -13,7 +13,11 @@ Imports:
     attempt,
     DT,
     glue,
-    htmltools
-RoxygenNote: 6.1.0
+    htmltools,
+    shinyhelper,
+    kolejkeR,
+    waffle,
+    ggplot2
+RoxygenNote: 7.0.2
 Suggests: 
     testthat

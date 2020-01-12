@@ -1,11 +1,38 @@
+
 #' @import shiny
+#' @import shinyhelper
 app_ui <- function() {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # List the first level UI elements here 
     fluidPage(
-      h1("kolejkeRShiny")
+      titlePanel("kolejkeR"),
+      sidebarLayout(
+          sidebarPanel(
+              helper(selectInput("of",
+                          "Select office",
+                          choices = c())),
+              #conditionalPanel(condition = "typeof input.of === 'undefined' || input.of == null", uiOutput("Queue"))
+              # dzięki selectizeInput mamy autocomplete, ale trzeba obsłużyć brzydkie inputy
+              helper(selectizeInput("queue", "Select available queue", choices = "")),
+              actionButton("submit", label = "Print results")
+          ),
+          mainPanel(
+              # helper(textOutput("result1")),
+              # textOutput("result2"),
+              # textOutput("result3")
+              tabsetPanel(
+                          tabPanel("Plot",
+                              plotOutput("queue_vis"),
+                              textOutput("result1"),
+                              textOutput("result2"),
+                              textOutput("result3")),
+                          tabPanel("Summary", textOutput("result4")),
+                          tabPanel("Table", textOutput("result5"))
+              )
+          )
+      )
     )
   )
 }

@@ -37,7 +37,7 @@ usethis::use_git()
 ## 
 ## If you have data in your package
 # It is better to add data set in kolejkeR instead
-# usethis::use_data_raw( name = "my_dataset", open = FALSE ) # Change "my_dataset"
+usethis::use_data_raw( name = "mock_response", open = FALSE ) # Change "my_dataset"
 ## 1.4 - Init Tests
 ## 
 ## Create a template for tests
