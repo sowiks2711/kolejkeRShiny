@@ -1,13 +1,15 @@
 #' @import shiny
 #' @import ggplot2
 #' @import waffle
+#' @import extrafont
+#' @import RColorBrewer
 app_server <- function(input, output,session) {
   # List the first level callModules here
     offices <- reactive(
       kolejkeR::get_available_offices()
     ) 
     queue_data <- reactive(
-      mock_offices_data[mock_offices_data$name == input$of & mock_offices_data$nazwaGrupy == input$queue,]
+      mock_data[mock_data$name == input$of & mock_data$nazwaGrupy == input$queue,]
     )
     observe({
       updateSelectInput(session, "of", "Select office", choices = offices(), selected = offices()[1])
@@ -15,24 +17,36 @@ app_server <- function(input, output,session) {
     choices <- reactive(kolejkeR::get_available_queues(ifelse(input$of == '', offices()[1], input$of)))
     
     observe({
-        updateSelectizeInput(session, "queue", "Select available queue", 
-                          choices = choices() )
+      updateSelectizeInput(session, "queue", "Select available queue", choices = choices())
     })
     
     results <- reactiveValues(res1="", res2="", res3="")
     observeEvent(input$submit,{
-        if(!input$queue %in% choices()) return()
-        output$queue_vis <- renderPlot({
-          waffle(queue_data()[['liczbaKlwKolejce']], rows = queue_data()[['liczbaCzynnychStan']], use_glyph = "child")
-        })
-        results$res1 <- kolejkeR::get_current_ticket_number_verbose(input$of,input$queue)
-        results$res2 <- kolejkeR::get_number_of_people_verbose(input$of,input$queue)
-        results$res3 <- kolejkeR::get_waiting_time_verbose(input$of,input$queue)
-        }
-    )
+      if(!input$queue %in% choices()) return()
+      service_booths <- queue_data()[['liczbaCzynnychStan']]
+      queuers <- queue_data()[['liczbaKlwKolejce']] 
+      service_booths <- 1
+      queuers <- 5
+      
+      output$open_booths_vis <- renderPlot({
+        waffle(
+          c(`Serving booths` = service_booths, `Queuers` = queuers),
+          rows = service_booths,
+          use_glyph = c("child", "institution"),
+          colors=brewer.pal(n = 3, name = "Set2")[-3],
+          glyph_size = 7) + theme(legend.position = c(0.5, -0.2), legend.direction = "horizontal")
+      })
+      #output$queuers_vis <- renderPlot(
+      #  waffle(queuers , use_glyph = "child", colors = "orange") +
+      #    
+      #})
+      results$res1 <- kolejkeR::get_current_ticket_number_verbose(input$of,input$queue)
+      results$res2 <- kolejkeR::get_number_of_people_verbose(input$of,input$queue)
+      results$res3 <- kolejkeR::get_waiting_time_verbose(input$of,input$queue)
+    })
     output$result1 <- renderText(results$res1)
     output$result2 <- renderText(results$res2)
     output$result3 <- renderText(results$res3)
     output$result4 <- renderText("Summary")
     output$result5 <- renderText("Table")
-}
+} 

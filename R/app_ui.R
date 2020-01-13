@@ -9,29 +9,37 @@ app_ui <- function() {
     fluidPage(
       titlePanel("kolejkeR"),
       sidebarLayout(
-          sidebarPanel(
-              helper(selectInput("of",
-                          "Select office",
-                          choices = c())),
-              #conditionalPanel(condition = "typeof input.of === 'undefined' || input.of == null", uiOutput("Queue"))
-              # dzięki selectizeInput mamy autocomplete, ale trzeba obsłużyć brzydkie inputy
-              helper(selectizeInput("queue", "Select available queue", choices = "")),
-              actionButton("submit", label = "Print results")
+        sidebarPanel(
+          helper(
+            selectInput("of", "Select office", choices = c())
           ),
-          mainPanel(
-              # helper(textOutput("result1")),
-              # textOutput("result2"),
-              # textOutput("result3")
-              tabsetPanel(
-                          tabPanel("Plot",
-                              plotOutput("queue_vis"),
-                              textOutput("result1"),
-                              textOutput("result2"),
-                              textOutput("result3")),
-                          tabPanel("Summary", textOutput("result4")),
-                          tabPanel("Table", textOutput("result5"))
-              )
+          #conditionalPanel(condition = "typeof input.of === 'undefined' || input.of == null", uiOutput("Queue"))
+          # dzięki selectizeInput mamy autocomplete, ale trzeba obsłużyć brzydkie inputy
+          helper(
+            selectizeInput("queue", "Select available queue", choices = "")
+          ),
+          actionButton("submit", label = "Print results")
+        ),
+        mainPanel(
+          # helper(textOutput("result1")),
+          # textOutput("result2"),
+          # textOutput("result3")
+          tabsetPanel(
+            tabPanel(
+              "Plot",
+              plotOutput("open_booths_vis"),
+              #fluidRow(
+              #  column(3, plotOutput("open_booths_vis")),
+              #  column(9, plotOutput("queuers_vis"))
+              #),
+              textOutput("result1"),
+              textOutput("result2"),
+              textOutput("result3")
+            ),
+            tabPanel("Summary", textOutput("result4")),
+            tabPanel("Table", textOutput("result5"))
           )
+        )
       )
     )
   )

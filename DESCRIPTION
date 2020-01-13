@@ -17,7 +17,9 @@ Imports:
     shinyhelper,
     kolejkeR,
     waffle,
-    ggplot2
+    ggplot2,
+    extrafont,
+    RColorBrewer
 RoxygenNote: 7.0.2
 Suggests: 
     testthat
