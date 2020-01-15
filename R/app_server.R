@@ -7,9 +7,12 @@ app_server <- function(input, output,session) {
     offices <- reactive(
       kolejkeR::get_available_offices()
     ) 
-    queue_data <- reactive(
+    queue_data <- reactive({
+      if (.Platform$OS.type == "windows") {
+        mock_data$nazwaGrupy <- iconv(mock_data$nazwaGrupy, from="utf-8", to="cp1250")
+      }
       mock_data[mock_data$name == input$of & mock_data$nazwaGrupy == input$queue,]
-    )
+    })
     observe({
       updateSelectInput(session, "of", "Select office", choices = offices(), selected = offices()[1])
     })
@@ -24,6 +27,7 @@ app_server <- function(input, output,session) {
       if (!input$queue %in% choices()) return()
       service_booths <- queue_data()[['liczbaCzynnychStan']]
       queuers <- queue_data()[['liczbaKlwKolejce']] 
+      
       output$open_booths_vis <- renderQueuePlot(
         queue_data()[['liczbaCzynnychStan']], 
         queue_data()[['liczbaKlwKolejce']], 
@@ -55,11 +59,42 @@ renderQueuePlot <- function(service_booths, queuers, office, queue_name) {
         #c(`Stanowiska obslugi` = service_booths, `Osoby w kolejce` = queuers),
         c(`Stanowiska obslugi` = service_booths, `Stojący w kolejce` = queuers),
         rows = service_booths,
-        use_glyph = c("institution", "child"),
+        #use_glyph = c("institution", "child"),
         colors=brewer.pal(n = 3, name = "Set2")[-3],
-        glyph_size = 7) +
+        #glyph_size = 7
+        ) +
         theme(legend.position = "bottom", legend.direction = "horizontal"
       ) + ggtitle(label = gsub("_", " ", office), subtitle = queue_name)
     }
   })
 }
+
+
+
+
+
+
+library(echarts4r)
+library(echarts4r.assets)
+
+df22 <- data.frame(
+  x = sort(LETTERS[1:5], decreasing = TRUE),
+  y = sort(sample(20:80,5))
+)
+
+df22 %>% 
+  e_charts(x) %>% 
+  e_pictorial(y, symbol = ea_icons("user"), 
+              symbolRepeat = TRUE, z = -1,
+              symbolSize = c(20, 20)) %>% 
+  e_theme("westeros") %>%
+#  e_title("People Icons") %>% 
+  e_flip_coords() %>%
+  # Hide Legend
+  e_legend(show = FALSE) # %>%
+  # Remove Gridlines
+  e_x_axis(splitLine=list(show = FALSE)) %>%
+  e_y_axis(splitLine=list(show = FALSE)) %>%
+  # Format Label
+  e_labels(fontSize = 16, fontWeight ='bold', position = "right", offset=c(10, 0))
+
