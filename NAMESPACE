@@ -2,7 +2,6 @@
 
 export(run_app)
 import(RColorBrewer)
-import(extrafont)
 import(ggplot2)
 import(shiny)
 import(shinyhelper)

@@ -18,8 +18,11 @@ Imports:
     kolejkeR,
     waffle,
     ggplot2,
-    extrafont,
-    RColorBrewer
+    RColorBrewer,
+    pkgload,
 RoxygenNote: 7.0.2
 Suggests: 
     testthat
+Remotes: 
+    sowiks2711/kolejkeR,
+    HaZdula/kolejkeR

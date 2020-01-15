@@ -1,7 +1,6 @@
 #' @import shiny
 #' @import ggplot2
 #' @import waffle
-#' @import extrafont
 #' @import RColorBrewer
 app_server <- function(input, output,session) {
   # List the first level callModules here
@@ -20,26 +19,19 @@ app_server <- function(input, output,session) {
       updateSelectizeInput(session, "queue", "Select available queue", choices = choices())
     })
     
-    results <- reactiveValues(res1="", res2="", res3="")
+    results <- rv(res1="", res2="", res3="")
     observeEvent(input$submit,{
-      if(!input$queue %in% choices()) return()
+      if (!input$queue %in% choices()) return()
       service_booths <- queue_data()[['liczbaCzynnychStan']]
       queuers <- queue_data()[['liczbaKlwKolejce']] 
-      service_booths <- 1
-      queuers <- 5
+      output$open_booths_vis <- renderQueuePlot(
+        queue_data()[['liczbaCzynnychStan']], 
+        queue_data()[['liczbaKlwKolejce']], 
+        input$of, 
+        input$queue
+      )
+
       
-      output$open_booths_vis <- renderPlot({
-        waffle(
-          c(`Serving booths` = service_booths, `Queuers` = queuers),
-          rows = service_booths,
-          use_glyph = c("child", "institution"),
-          colors=brewer.pal(n = 3, name = "Set2")[-3],
-          glyph_size = 7) + theme(legend.position = c(0.5, -0.2), legend.direction = "horizontal")
-      })
-      #output$queuers_vis <- renderPlot(
-      #  waffle(queuers , use_glyph = "child", colors = "orange") +
-      #    
-      #})
       results$res1 <- kolejkeR::get_current_ticket_number_verbose(input$of,input$queue)
       results$res2 <- kolejkeR::get_number_of_people_verbose(input$of,input$queue)
       results$res3 <- kolejkeR::get_waiting_time_verbose(input$of,input$queue)
@@ -50,3 +42,24 @@ app_server <- function(input, output,session) {
     output$result4 <- renderText("Summary")
     output$result5 <- renderText("Table")
 } 
+
+renderQueuePlot <- function(service_booths, queuers, office, queue_name) {
+  renderPlot({
+    if (service_booths <= 0 ) {
+      ggplot() +
+        ggtitle(label = "Brak otwartych stanowisk!")
+      
+    } else {
+      waffle(
+        #c(`Serving booths` = service_booths, `Queuers` = queuers),
+        #c(`Stanowiska obslugi` = service_booths, `Osoby w kolejce` = queuers),
+        c(`Stanowiska obslugi` = service_booths, `Stojący w kolejce` = queuers),
+        rows = service_booths,
+        use_glyph = c("institution", "child"),
+        colors=brewer.pal(n = 3, name = "Set2")[-3],
+        glyph_size = 7) +
+        theme(legend.position = "bottom", legend.direction = "horizontal"
+      ) + ggtitle(label = gsub("_", " ", office), subtitle = queue_name)
+    }
+  })
+}

@@ -27,16 +27,19 @@ app_ui <- function() {
           tabsetPanel(
             tabPanel(
               "Plot",
-              plotOutput("open_booths_vis"),
+              plotOutput("open_booths_vis")
               #fluidRow(
               #  column(3, plotOutput("open_booths_vis")),
               #  column(9, plotOutput("queuers_vis"))
               #),
+              
+            ),
+            tabPanel("Summary", 
               textOutput("result1"),
               textOutput("result2"),
-              textOutput("result3")
+              textOutput("result3"),
+              textOutput("result4")
             ),
-            tabPanel("Summary", textOutput("result4")),
             tabPanel("Table", textOutput("result5"))
           )
         )
