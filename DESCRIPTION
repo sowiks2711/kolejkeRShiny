@@ -19,7 +19,7 @@ Imports:
     waffle,
     ggplot2,
     RColorBrewer,
-    pkgload,
+    pkgload
 RoxygenNote: 7.0.2
 Suggests: 
     testthat
