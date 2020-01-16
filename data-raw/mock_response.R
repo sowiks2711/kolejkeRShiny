@@ -7,3 +7,4 @@ if (.Platform$OS.type == "windows") {
 }
 usethis::use_data(mock_data, overwrite = TRUE)
 usethis::use_data(i18n, overwrite = TRUE)
+

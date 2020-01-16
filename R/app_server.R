@@ -19,17 +19,29 @@ app_server <- function(input, output,session) {
     
     observe({
       updateSelectInput(session, "of", i18n$t("Select office"), choices = offices(), selected = offices()[1])
+    })
+    observe({
       updateSelectizeInput(session, "queue", i18n$t("Select available queue"), choices = choices())
     })
+    
+    observe({
+      updateActionButton(session, "submit", label = i18n$t("Print results"))
+    })
+    output$of_label = renderText(i18n$t("Select office"))
+    output$queue_label = renderText(i18n$t("Select available queue"))
+    output$submit_label = renderText(i18n$t("Print results"))
+    output$diagram_label = renderText(i18n$t("Diagram"))
+    output$state_label = renderText(i18n$t("Current state"))
+    output$table_label = renderText(i18n$t("Table"))
+    output$predictions_label = renderText(i18n$t("Predictions"))
+    
     choices <- reactive({
-      #kolejkeR::get_available_queues(
-      #  ifelse(input$of == '', offices()[1], input$of)
-      #)
       office_name = input$of
       if(office_name== '') {
         office_name <- offices()[1] 
       }
       
+      #kolejkeR::get_available_queues(office_name)
       unique(mock_data[mock_data$name == office_name,'nazwaGrupy'])
     })
     
@@ -79,9 +91,9 @@ renderQueuePlot <- function(service_booths, queuers, office, queue_name) {
         use_glyph = c("institution", "child"),
         colors=brewer.pal(n = 3, name = "Set2")[-3],
         glyph_size = 10
-        ) +
-        theme(legend.position = "bottom", legend.direction = "horizontal"
-      ) + ggtitle(label = gsub("_", " ", office), subtitle = queue_name)
+      ) +
+      theme(legend.position = "bottom", legend.direction = "horizontal") + 
+      ggtitle(label = gsub("_", " ", office), subtitle = queue_name)
     }
   })
 }

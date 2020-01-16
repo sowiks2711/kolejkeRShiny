@@ -13,26 +13,26 @@ app_ui <- function() {
       sidebarLayout(
         sidebarPanel(
           helper(selectInput("of",
-                             i18n$t("Select office"),
+                             textOutput("of_label"),
                              choices = c())),
-          helper(selectizeInput("queue", i18n$t("Select available queue"), choices = "")),
-          actionButton("submit", label = i18n$t("Print results"))
+          helper(selectizeInput("queue", textOutput("queue_label"), choices = "")),
+          actionButton("submit", textOutput("submit_label"))
         ),
         mainPanel(
         
           tabsetPanel(
             tabPanel(
-              "Plot",
+              textOutput("diagram_label"),
               plotOutput("open_booths_vis")
             ),
-            tabPanel(i18n$t("Current state"),
+            tabPanel(textOutput("state_label"),
               textOutput("result1"),
               textOutput("result2"),
               textOutput("result3")
             ),
-            tabPanel(i18n$t("Table"), DTOutput("result4")),
-            tabPanel(i18n$t("Predictions"), textOutput("result5"))
-          )
+            tabPanel(textOutput("table_label"), DTOutput("result4")),
+            tabPanel(textOutput("predictions_label"), textOutput("result5"))
+        )
         )
       )
     )
