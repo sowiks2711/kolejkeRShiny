@@ -4,19 +4,22 @@
 #' @import RColorBrewer
 #' @import extrafont
 app_server <- function(input, output,session) {
+  lang <- reactive("pl")
   # List the first level callModules here
     offices <- reactive({
       #kolejkeR::get_available_offices()
+      i18n$set_translation_language(lang())
       unique(mock_data[["name"]])
-    }) 
+      
+    })
+    
     queue_data <- reactive({
-      if (.Platform$OS.type == "windows") {
-        mock_data$nazwaGrupy <- iconv(mock_data$nazwaGrupy, from="utf-8", to="cp1250")
-      }
       mock_data[mock_data$name == input$of & mock_data$nazwaGrupy == input$queue,]
     })
+    
     observe({
-      updateSelectInput(session, "of", "Select office", choices = offices(), selected = offices()[1])
+      updateSelectInput(session, "of", i18n$t("Select office"), choices = offices(), selected = offices()[1])
+      updateSelectizeInput(session, "queue", i18n$t("Select available queue"), choices = choices())
     })
     choices <- reactive({
       #kolejkeR::get_available_queues(
@@ -30,13 +33,15 @@ app_server <- function(input, output,session) {
       unique(mock_data[mock_data$name == office_name,'nazwaGrupy'])
     })
     
-    observe({
-      updateSelectizeInput(session, "queue", "Select available queue", choices = choices())
-    })
-    
     results <- rv(res1="", res2="", res3="")
     observeEvent(input$submit,{
+      
       if (!input$queue %in% choices()) return()
+      results$res1 <- kolejkeR::get_current_ticket_number_verbose(input$of,input$queue, language = lang())
+      results$res2 <- kolejkeR::get_number_of_people_verbose(input$of,input$queue, language = lang())
+      results$res3 <- kolejkeR::get_waiting_time_verbose(input$of,input$queue, language = lang())
+      results$res4 <- kolejkeR::get_raw_data(input$of)
+      
       service_booths <- queue_data()[['liczbaCzynnychStan']]
       queuers <- queue_data()[['liczbaKlwKolejce']] 
       
@@ -55,8 +60,8 @@ app_server <- function(input, output,session) {
     output$result1 <- renderText(results$res1)
     output$result2 <- renderText(results$res2)
     output$result3 <- renderText(results$res3)
-    output$result4 <- renderText("Summary")
-    output$result5 <- renderText("Table")
+    output$result4 <- renderDT(results$res4)
+    output$result5 <- renderText(i18n$t("Summary"))
 } 
 
 renderQueuePlot <- function(service_booths, queuers, office, queue_name) {

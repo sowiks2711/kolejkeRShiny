@@ -1,6 +1,8 @@
-
 #' @import shiny
 #' @import shinyhelper
+#' @import shinycssloaders
+#' @import DT
+#' @import shiny.i18n
 app_ui <- function() {
   tagList(
     # Leave this function for adding external resources
@@ -10,37 +12,26 @@ app_ui <- function() {
       titlePanel("kolejkeR"),
       sidebarLayout(
         sidebarPanel(
-          helper(
-            selectInput("of", "Select office", choices = c())
-          ),
-          #conditionalPanel(condition = "typeof input.of === 'undefined' || input.of == null", uiOutput("Queue"))
-          # dzięki selectizeInput mamy autocomplete, ale trzeba obsłużyć brzydkie inputy
-          helper(
-            selectizeInput("queue", "Select available queue", choices = "")
-          ),
-          actionButton("submit", label = "Print results")
+          helper(selectInput("of",
+                             i18n$t("Select office"),
+                             choices = c())),
+          helper(selectizeInput("queue", i18n$t("Select available queue"), choices = "")),
+          actionButton("submit", label = i18n$t("Print results"))
         ),
         mainPanel(
-          # helper(textOutput("result1")),
-          # textOutput("result2"),
-          # textOutput("result3")
+        
           tabsetPanel(
             tabPanel(
               "Plot",
               plotOutput("open_booths_vis")
-              #fluidRow(
-              #  column(3, plotOutput("open_booths_vis")),
-              #  column(9, plotOutput("queuers_vis"))
-              #),
-              
             ),
-            tabPanel("Summary", 
+            tabPanel(i18n$t("Current state"),
               textOutput("result1"),
               textOutput("result2"),
-              textOutput("result3"),
-              textOutput("result4")
+              textOutput("result3")
             ),
-            tabPanel("Table", textOutput("result5"))
+            tabPanel(i18n$t("Table"), DTOutput("result4")),
+            tabPanel(i18n$t("Predictions"), textOutput("result5"))
           )
         )
       )

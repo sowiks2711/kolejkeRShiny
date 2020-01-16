@@ -19,7 +19,8 @@ usethis::use_package( "waffle" )
 usethis::use_package( "ggplot2" )
 usethis::use_package( "RColorBrewer" )
 usethis::use_package( "extrafont" )
-
+usethis::use_package( "shinycssloaders" )
+usethis::use_package( "shiny.i18n" )
 ## 2.3 Add tests
 
 usethis::use_test( "app" )

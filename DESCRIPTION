@@ -1,7 +1,19 @@
 Package: kolejkeRShiny
 Title: KolejkeR Shiny Application
 Version: 0.0.0.9000
-Authors@R: person('Hanna', 'Zdulska', email = 'zdulskah@student.mini.pw.edu.com', role = c('cre', 'aut'))
+Authors@R: c(person(given = "Hanna",
+                    family = "Zdulska",
+                    role = c("aut", "cre"),
+                    email = "zdulskah@student.mini.pw.edu.com"),
+             person(given = "Jakub",
+                    family = "Pingielski",
+                    role ="aut"),
+             person(given = "Sebastian",
+                    family = "Sowik",
+                    role = "aut"),
+             person(given = "Pawel",
+                    family = "Morgen",
+                    role = "aut"))
 Description: Package using kolejkeR library to show realtime data about queues in Warsaw's offices in form of shiny application.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -19,7 +31,9 @@ Imports:
     waffle,
     ggplot2,
     RColorBrewer,
-    pkgload
+    pkgload,
+    shinycssloaders,
+    shiny.i18n
 RoxygenNote: 7.0.2
 Suggests: 
     testthat
