@@ -14,8 +14,8 @@ app_ui <- function() {
         sidebarPanel(
           helper(selectInput("of",
                              textOutput("of_label"),
-                             choices = c())),
-          helper(selectizeInput("queue", textOutput("queue_label"), choices = "")),
+                             choices = c()), content = i18n$t("office_en")),
+          helper(selectizeInput("queue", textOutput("queue_label"), choices = ""), content = i18n$t("queue_en")),
           actionButton("submit", textOutput("submit_label"))
         ),
         mainPanel(

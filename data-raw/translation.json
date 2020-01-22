@@ -8,6 +8,8 @@
       {"en": "Table", "pl": "Tabela"},
       {"en": "Predictions", "pl": "Przewidywania"},
       {"en": "Summary", "pl": "Podsumowanie"},
-      {"en": "Diagram", "pl": "Diagram"}
+      {"en": "Diagram", "pl": "Diagram"},
+      {"en": "office_en", "pl": "office_pl"},
+      {"en": "queue_en", "pl": "queue_pl"}
     ]
 }
