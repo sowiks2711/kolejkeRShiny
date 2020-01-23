@@ -4,36 +4,52 @@
 #' @import RColorBrewer
 #' @import extrafont
 app_server <- function(input, output,session) {
-  lang <- reactive("pl")
+    lang <- reactive(
+      input$lang
+    )
+    i18n_r <- reactive({
+      i18n$set_translation_language(input$lang)
+      i18n
+    })
+    use_mock <- reactive(
+      ifelse(input$mock == "TRUE", TRUE, FALSE)
+    )
   # List the first level callModules here
     offices <- reactive({
-      #kolejkeR::get_available_offices()
-      i18n$set_translation_language(lang())
-      unique(mock_data[["name"]])
-      
+      result <- unique(mock_data[["name"]])
+      result
     })
-    
+    raw_data <- reactive({
+      result <- mock_data[mock_data$name == input$of,]
+      if(!use_mock()) {
+        result <- kolejkeR::get_raw_data(input$of)
+      }
+      result
+    })
     queue_data <- reactive({
-      mock_data[mock_data$name == input$of & mock_data$nazwaGrupy == input$queue,]
+      raw_data()[raw_data()$nazwaGrupy == input$queue,]
     })
     
     observe({
-      updateSelectInput(session, "of", i18n$t("Select office"), choices = offices(), selected = offices()[1])
+      updateSelectInput(session, "of", i18n_r()$t("Select office"), choices = offices(), selected = offices()[1])
     })
     observe({
-      updateSelectizeInput(session, "queue", i18n$t("Select available queue"), choices = choices())
+      updateSelectizeInput(session, "queue", i18n_r()$t("Select available queue"), choices = choices())
     })
     
     observe({
-      updateActionButton(session, "submit", label = i18n$t("Print results"))
+      updateActionButton(session, "submit", label = i18n_r()$t("Print results"))
     })
-    output$of_label = renderText(i18n$t("Select office"))
-    output$queue_label = renderText(i18n$t("Select available queue"))
-    output$submit_label = renderText(i18n$t("Print results"))
-    output$diagram_label = renderText(i18n$t("Diagram"))
-    output$state_label = renderText(i18n$t("Current state"))
-    output$table_label = renderText(i18n$t("Table"))
-    output$predictions_label = renderText(i18n$t("Predictions"))
+    output$of_label = renderText(i18n_r()$t("Select office"))
+    output$queue_label = renderText(i18n_r()$t("Select available queue"))
+    output$submit_label = renderText(i18n_r()$t("Print results"))
+    output$diagram_label = renderText(i18n_r()$t("Diagram"))
+    output$state_label = renderText(i18n_r()$t("Current state"))
+    output$table_label = renderText(i18n_r()$t("Table"))
+    output$predictions_label = renderText(i18n_r()$t("Predictions"))
+    output$lang_label = renderText(i18n_r()$t("Select language"))
+    output$mock_label = renderText(i18n_r()$t("Data source"))
+    
     
     choices <- reactive({
       office_name = input$of
@@ -49,10 +65,11 @@ app_server <- function(input, output,session) {
     observeEvent(input$submit,{
       
       if (!input$queue %in% choices()) return()
+      
       results$res1 <- kolejkeR::get_current_ticket_number_verbose(input$of,input$queue, language = lang())
       results$res2 <- kolejkeR::get_number_of_people_verbose(input$of,input$queue, language = lang())
       results$res3 <- kolejkeR::get_waiting_time_verbose(input$of,input$queue, language = lang())
-      results$res4 <- kolejkeR::get_raw_data(input$of)
+      results$res4 <- raw_data()
       
       service_booths <- queue_data()[['liczbaCzynnychStan']]
       queuers <- queue_data()[['liczbaKlwKolejce']] 
@@ -63,11 +80,6 @@ app_server <- function(input, output,session) {
         input$of, 
         input$queue
       )
-
-      
-      results$res1 <- kolejkeR::get_current_ticket_number_verbose(input$of,input$queue)
-      results$res2 <- kolejkeR::get_number_of_people_verbose(input$of,input$queue)
-      results$res3 <- kolejkeR::get_waiting_time_verbose(input$of,input$queue)
     })
     output$result1 <- renderText(results$res1)
     output$result2 <- renderText(results$res2)

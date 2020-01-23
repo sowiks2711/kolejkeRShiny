@@ -14,9 +14,18 @@ app_ui <- function() {
         sidebarPanel(
           helper(selectInput("of",
                              textOutput("of_label"),
-                             choices = c()), content = i18n$t("office_en")),
+                             choices = ""), content = i18n$t("office_en")),
           helper(selectizeInput("queue", textOutput("queue_label"), choices = ""), content = i18n$t("queue_en")),
-          actionButton("submit", textOutput("submit_label"))
+          actionButton("submit", textOutput("submit_label")),
+          radioButtons("lang", textOutput("lang_label"),
+                       choices = c(pl = "pl",
+                                   eng = "en"),
+                       selected = "pl"),
+          radioButtons("mock", textOutput("mock_label"),
+                       choices = c(Mock = "True",
+                                   Live = "False"),
+                       selected = "False"),
+          
         ),
         mainPanel(
         

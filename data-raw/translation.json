@@ -10,6 +10,8 @@
       {"en": "Summary", "pl": "Podsumowanie"},
       {"en": "Diagram", "pl": "Diagram"},
       {"en": "office_en", "pl": "office_pl"},
-      {"en": "queue_en", "pl": "queue_pl"}
+      {"en": "queue_en", "pl": "queue_pl"},
+      {"en": "Select language", "pl": "Wybierz język"},
+      {"en": "Data source", "pl": "Źródło danych"}
     ]
 }
